@@ -1,0 +1,90 @@
+body,
+img,
+ul,
+li,
+button,
+span,
+p {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	text-align: center;
+}
+
+.whell_wra {
+	position: relative;
+	width: 320px;
+	height: 450px;
+	overflow: hidden;
+	border: 1px solid red;
+	margin: 100px auto;
+}
+
+.whell_box {
+	transform: translateX(0);
+}
+
+.whell_item {
+	float: left;
+}
+
+.point {
+	display: none;
+	position: absolute;
+	z-index: 1;
+	min-width: 100px;
+	bottom: 20px;
+	text-align: center;
+	left: 50%;
+	transform: translateX(-50%);
+	box-sizing: border-box;
+
+	li {
+		display: inline-block;
+		width: 20px;
+		height: 5px;
+		border-radius: 5px;
+		background-color: lightblue;
+		cursor: pointer;
+	}
+
+	li + li {
+		margin-left: 10px;
+	}
+}
+
+.point .point_active {
+	background-color: royalblue;
+}
+
+.btn {
+	display: none;
+	position: absolute;
+	z-index: 1;
+	width: 100%;
+	padding: 0 15px;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	text-align: left;
+	box-sizing: border-box;
+
+	span {
+		display: inline-block;
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		background-color: rgba(0, 0, 0, 0.3);
+		color: #fff;
+		border: none;
+		text-align: center;
+		line-height: 30px;
+		cursor: pointer;
+	}
+	
+	.next{
+		float: right;
+	}
+}
