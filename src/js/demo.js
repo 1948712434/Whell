@@ -141,10 +141,3 @@ function Whell(elWra, options) {
 		_this.addClass("point_active");
 	})
 }
-
-
-var whell = new Whell("#whellDemo", {
-	autoWhell: true,
-	isShwoBtn: true,
-	isShowPoint: true
-});
