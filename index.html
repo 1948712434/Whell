@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<div id="whellDemo" class="whell_wra">
-			<div class="whell_box">
+			<div class="whell_box trans">
 				<div class="whell_item"><img src="src/img/li%20(1).jpg" /></div>
 				<div class="whell_item"><img src="src/img/li%20(2).jpg" /></div>
 				<div class="whell_item"><img src="src/img/li%20(3).jpg" /></div>
@@ -25,9 +25,11 @@
 		<script src="dist/js/demo.js"></script>
 		<script>
 			var whell = new Whell("#whellDemo", {
-				autoWhell: true,
-				isShwoBtn: true,
-				isShowPoint: true
+				autoWhell: true,//自动轮播
+				isShwoBtn: true,//显示切换按钮
+				pointArr:[1,2,3],//子弹导航的内容（可以使用html）
+				isShowPoint: true,//显示子弹导航（direction为p是才显示pointArr的相应信息，否则不显示）
+				direction:"l",//轮播方向，l为竖向，p为横向
 			});
 		</script>
 	</body>

@@ -16,8 +16,6 @@ body {
   width: 320px;
   height: 450px;
   overflow: hidden;
-  border: 1px solid red;
-  margin: 100px auto;
 }
 .whell_box {
   transform: translateX(0);
@@ -28,8 +26,8 @@ body {
 .point {
   display: none;
   position: absolute;
-  z-index: 1;
-  min-width: 100px;
+  z-index: 2;
+  min-width: 20px;
   bottom: 20px;
   text-align: center;
   left: 50%;
@@ -38,17 +36,35 @@ body {
 }
 .point li {
   display: inline-block;
-  width: 20px;
-  height: 5px;
+  min-width: 20px;
+  min-height: 5px;
   border-radius: 5px;
   background-color: lightblue;
   cursor: pointer;
+  font-size: 12px;
 }
 .point li + li {
   margin-left: 10px;
 }
+.p_point {
+  min-height: 60px;
+  top: 50%;
+  left: 50px;
+  transform: translate(0, -50%);
+}
+.p_point li {
+  display: block;
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 20px;
+}
+.p_point li + li {
+  margin-left: 0;
+  margin-top: 10px;
+}
 .point .point_active {
   background-color: royalblue;
+  color: #fff;
 }
 .btn {
   display: none;
@@ -61,6 +77,7 @@ body {
   transform: translateY(-50%);
   text-align: left;
   box-sizing: border-box;
+  vertical-align: middle;
 }
 .btn span {
   display: inline-block;
@@ -71,9 +88,14 @@ body {
   color: #fff;
   border: none;
   text-align: center;
-  line-height: 30px;
+  line-height: 25px;
   cursor: pointer;
 }
 .btn .next {
   float: right;
+}
+.trans {
+  transition: translate 0.75s;
+  transition-property: all;
+  transition-timing-function: ease-in-out;
 }

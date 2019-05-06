@@ -7,9 +7,11 @@ function Whell(elWra, options) {
 	var that = this; //保存this
 
 	that.option = {
-		autoWhell: true, //自动播放
-		isShowPoint: true, //显示滚动栏
+		autoWhell: true, //自动轮播
+		isShowPoint: true, //显示子弹导航（direction为p是才显示pointArr的相应信息，否则不显示）
 		isShwoBtn: true, //显示切换按钮
+		pointArr: [], //子弹导航的内容（可以使用html）
+		direction: "p", //轮播方向，l为竖向，p为横向
 	}
 
 	//将options和that.option都存在的属性进行合并
@@ -21,8 +23,23 @@ function Whell(elWra, options) {
 		}
 	}
 
+	//判断轮播方向
+	var direction;
+	(that.option.direction === "l") ? direction = true: direction = false;
+
 	//获取轮播图的容器宽高以及轮播的图片个数
 	that.$wra = $(elWra);
+
+	if (direction) {
+		that.$wra.css({
+			position: "fixed",
+			top: 0,
+			left: 0,
+			width: "100vw",
+			height: "100vh"
+		})
+	}
+
 	that.$wraWid = that.$wra.width();
 	that.$wraHei = that.$wra.height();
 	that.$item = that.$wra.find('.whell_item');
@@ -33,9 +50,13 @@ function Whell(elWra, options) {
 	that.$box.height(that.$wraHei);
 
 	that.$item.width(that.$wraWid);
-	that.$item.width(that.$wraHeight);
-
-	that.$item.find("img").width("100%");
+	that.$item.height(that.$wraHei);
+	if (direction) {
+		that.$item.css({
+			float: "none"
+		})
+	}
+	that.$item.find("img").height("100%");
 
 	//标志当前页系数和图片个数
 	that.indexPage = 0;
@@ -46,9 +67,11 @@ function Whell(elWra, options) {
 
 	//导航point
 	that.point = that.$wra.find(".point");
+	
 	//利用图片个数循环出导航
 	$.each(that.$item, function(index) {
-		var $li = $("<li data-index='" + index + "'></li>");
+		var text = (typeof that.option.pointArr[index] !== "undefined" && direction) ? that.option.pointArr[index] : "";
+		var $li = $("<li data-index='" + index + "'>" + text + "</li>");
 
 		if (index === 0) {
 			$li.addClass("point_active");
@@ -57,6 +80,12 @@ function Whell(elWra, options) {
 		that.point.append($li);
 	})
 
+	//竖向轮播样式
+	if (direction) {
+		that.point.addClass("p_point");
+		var pointLiHei = that.point.find("li").eq(0).height();
+		that.point.height(pointLiHei*that.$item.length);//设置子弹导航的高度
+	}
 	//判断是否显示子弹导航
 	if (that.option.isShowPoint) that.point.show();
 
@@ -68,11 +97,14 @@ function Whell(elWra, options) {
 			that.indexPage = -(that.imgLen - 1);
 		}
 
+		var translate = direction ? "translateY(" + that.indexPage * that.$wraHei + "px)" : "translateX(" + that.indexPage *
+			that.$wraWid + "px)";
 		that.$box.css(
-			"transform", "translateX(" + that.indexPage * that.$wraWid + "px)"
+			"transform", translate
 		);
 
-		that.point.find("li").removeClass("point_active").eq([that.indexPage]).addClass("point_active");
+		that.point.find("li").removeClass("point_active").eq(Math.abs([that.indexPage])).addClass("point_active");
+
 	}
 
 	//上一页
@@ -83,11 +115,13 @@ function Whell(elWra, options) {
 			that.indexPage = 0;
 		}
 
+		var translate = direction ? "translateY(" + that.indexPage * that.$wraHei + "px)" : "translateX(" + that.indexPage *
+			that.$wraWid + "px)";
 		that.$box.css(
-			"transform", "translateX(" + that.indexPage * that.$wraWid + "px)"
+			"transform", translate
 		);
 
-		that.point.find("li").removeClass("point_active").eq([that.indexPage]).addClass("point_active");
+		that.point.find("li").removeClass("point_active").eq(Math.abs([that.indexPage])).addClass("point_active");
 	}
 
 	//判断是否使用自动轮播
@@ -100,17 +134,17 @@ function Whell(elWra, options) {
 
 	//鼠标移入停止自动轮播
 	that.$wra.on("mouseenter", function() {
-		if (that.option.isShwoBtn) that.btns.show();
+		if (that.option.isShwoBtn && !direction) that.btns.show();//竖向不显示切换按钮
 
 		if (that.option['autoWhell']) clearInterval(that.startUpTime);
 	})
 
 	//鼠标移除后播放
 	that.$wra.on("mouseleave", function() {
-		if (that.option.isShwoBtn) that.btns.hide();
+		if (that.option.isShwoBtn && !direction) that.btns.hide();//竖向不显示切换按钮
 
 		//启动自动轮播
-		if (that.option['autoWhell']){
+		if (that.option['autoWhell']) {
 			that.startUpTime = setInterval(function() {
 				that.nextPage();
 			}, 3000);
@@ -129,12 +163,17 @@ function Whell(elWra, options) {
 
 	//点击子弹导航
 	that.point.on("click", "li", function() {
-		var _this = $(this);
-		index = parseInt(_this.data().index) * -1;
+		var
+			_this = $(this),
+			index = parseInt(_this.data().index) * -1;
 
 		that.indexPage = index;
+
+		var translate = direction ? "translateY(" + that.indexPage * that.$wraHei + "px)" : "translateX(" + that.indexPage *
+			that.$wraWid + "px)";
+
 		that.$box.css(
-			"transform", "translateX(" + index * that.$wraWid + "px)"
+			"transform", translate
 		);
 
 		_this.siblings().removeClass("point_active");
