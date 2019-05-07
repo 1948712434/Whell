@@ -11,7 +11,7 @@ function Whell(elWra, options) {
 		isShowPoint: true, //显示子弹导航（direction为p是才显示pointArr的相应信息，否则不显示）
 		isShwoBtn: true, //显示切换按钮
 		pointArr: [], //子弹导航的内容（可以使用html）
-		direction: "p", //轮播方向，l为竖向，p为横向
+		direction: "p", //轮播方向，l为纵向，p为横向
 	}
 
 	//将options和that.option都存在的属性进行合并
@@ -67,7 +67,7 @@ function Whell(elWra, options) {
 
 	//导航point
 	that.point = that.$wra.find(".point");
-	
+
 	//利用图片个数循环出导航
 	$.each(that.$item, function(index) {
 		var text = (typeof that.option.pointArr[index] !== "undefined" && direction) ? that.option.pointArr[index] : "";
@@ -80,11 +80,11 @@ function Whell(elWra, options) {
 		that.point.append($li);
 	})
 
-	//竖向轮播样式
+	//纵向轮播样式
 	if (direction) {
 		that.point.addClass("p_point");
 		var pointLiHei = that.point.find("li").eq(0).height();
-		that.point.height(pointLiHei*that.$item.length);//设置子弹导航的高度
+		that.point.height(pointLiHei * that.$item.length); //设置子弹导航的高度
 	}
 	//判断是否显示子弹导航
 	if (that.option.isShowPoint) that.point.show();
@@ -128,20 +128,20 @@ function Whell(elWra, options) {
 	if (that.option['autoWhell']) {
 		//启动自动轮播
 		that.startUpTime = setInterval(function() {
-			that.nextPage();
+			that.prevPage();
 		}, 3000);
 	}
 
 	//鼠标移入停止自动轮播
 	that.$wra.on("mouseenter", function() {
-		if (that.option.isShwoBtn && !direction) that.btns.show();//竖向不显示切换按钮
+		if (that.option.isShwoBtn && !direction) that.btns.show(); //纵向不显示切换按钮
 
 		if (that.option['autoWhell']) clearInterval(that.startUpTime);
 	})
 
 	//鼠标移除后播放
 	that.$wra.on("mouseleave", function() {
-		if (that.option.isShwoBtn && !direction) that.btns.hide();//竖向不显示切换按钮
+		if (that.option.isShwoBtn && !direction) that.btns.hide(); //纵向不显示切换按钮
 
 		//启动自动轮播
 		if (that.option['autoWhell']) {
@@ -151,14 +151,35 @@ function Whell(elWra, options) {
 		}
 	})
 
-	//切换上一页
+	//点击切换上一页
 	that.$wra.find(".prev").on("click", function() {
 		that.prevPage();
 	})
 
-	//切换下一页
+	//点击切换下一页
 	that.$wra.find(".next").on("click", function() {
 		that.nextPage();
+	})
+
+	/**键盘事件
+	 * 37 左、38 上、 39 右 、 40下
+	 */
+	//键盘切换上一页
+	$(document).on("keydown", function(e) {
+		if (that.option['autoWhell']) clearInterval(that.startUpTime);//关掉自动轮播
+		
+		if(e.keyCode === 38 && direction){//纵向轮播，则使用上下切换
+			that.prevPage();
+		}else if(e.keyCode === 40 && direction){//纵向轮播，则使用上下切换
+			that.nextPage();
+		}
+		
+		//启动自动轮播
+		if (that.option['autoWhell']) {
+			that.startUpTime = setInterval(function() {
+				that.nextPage();
+			}, 3000);
+		}
 	})
 
 	//点击子弹导航
